@@ -1,0 +1,110 @@
+{
+  "threshold": 0.3499999999999999,
+  "test": {
+    "majority class": {
+      "roc_auc": 0.5,
+      "pr_auc": 0.499,
+      "f1": 0.0,
+      "bal_acc": 0.5
+    },
+    "colour hist + logreg": {
+      "roc_auc": 0.773,
+      "pr_auc": 0.718,
+      "f1": 0.725,
+      "bal_acc": 0.717
+    },
+    "embeddings + logreg": {
+      "roc_auc": 0.972,
+      "pr_auc": 0.969,
+      "f1": 0.931,
+      "bal_acc": 0.931
+    },
+    "fine-tuned MobileNetV2": {
+      "roc_auc": 0.986,
+      "pr_auc": 0.982,
+      "f1": 0.951,
+      "bal_acc": 0.951
+    }
+  },
+  "test_error_by_source": {
+    "majority class": {
+      "error on ai_normal": 0.0,
+      "error on brainrot": 1.0,
+      "error on photo": 0.0
+    },
+    "colour hist + logreg": {
+      "error on ai_normal": 0.533,
+      "error on brainrot": 0.253,
+      "error on photo": 0.289
+    },
+    "embeddings + logreg": {
+      "error on ai_normal": 0.387,
+      "error on brainrot": 0.072,
+      "error on photo": 0.03
+    },
+    "fine-tuned MobileNetV2": {
+      "error on ai_normal": 0.387,
+      "error on brainrot": 0.047,
+      "error on photo": 0.015
+    }
+  },
+  "border_check": {
+    "error, full image": {
+      "ai_normal": 0.387,
+      "brainrot": 0.047,
+      "photo": 0.015
+    },
+    "error, centre 60% only": {
+      "ai_normal": 0.32,
+      "brainrot": 0.091,
+      "photo": 0.034
+    }
+  },
+  "cv_dev_5fold": {
+    "majority class": {
+      "roc_auc": "0.500 \u00b1 0.000",
+      "pr_auc": "0.499 \u00b1 0.000",
+      "f1": "0.000 \u00b1 0.000",
+      "bal_acc": "0.500 \u00b1 0.000"
+    },
+    "colour hist + logreg": {
+      "roc_auc": "0.775 \u00b1 0.011",
+      "pr_auc": "0.732 \u00b1 0.010",
+      "f1": "0.723 \u00b1 0.009",
+      "bal_acc": "0.722 \u00b1 0.009"
+    },
+    "embeddings + logreg": {
+      "roc_auc": "0.978 \u00b1 0.002",
+      "pr_auc": "0.976 \u00b1 0.002",
+      "f1": "0.931 \u00b1 0.003",
+      "bal_acc": "0.931 \u00b1 0.003"
+    }
+  },
+  "hard_negative_curve": {
+    "0.0": {
+      "ai_normal": 0.576,
+      "brainrot": 0.036,
+      "photo": 0.039
+    },
+    "0.25": {
+      "ai_normal": 0.473,
+      "brainrot": 0.045,
+      "photo": 0.041
+    },
+    "0.5": {
+      "ai_normal": 0.372,
+      "brainrot": 0.056,
+      "photo": 0.04
+    },
+    "1.0": {
+      "ai_normal": 0.318,
+      "brainrot": 0.07,
+      "photo": 0.04
+    }
+  },
+  "n_images": {
+    "train": 6987,
+    "val": 1497,
+    "test": 1498
+  }
+}
