@@ -44,14 +44,14 @@
     },
     "fine-tuned MobileNetV2": {
       "error on ai_normal": 0.387,
-      "error on brainrot": 0.047,
+      "error on brainrot": 0.045,
       "error on photo": 0.015
     }
   },
   "border_check": {
     "error, full image": {
       "ai_normal": 0.387,
-      "brainrot": 0.047,
+      "brainrot": 0.045,
       "photo": 0.015
     },
     "error, centre 60% only": {

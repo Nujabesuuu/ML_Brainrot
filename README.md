@@ -34,7 +34,7 @@ split 70/15/15 into train/val/test, stratified by source.
 | preprocessing | fixed per-image standardisation; `StandardScaler` inside a `Pipeline` | nothing learnt from data is fitted outside a CV fold, so nothing leaks |
 | models | (a) frozen MobileNetV2 embeddings + logistic regression; (b) MobileNetV2 fine-tuned in Keras with augmentation | transfer learning works on ~7k images and a CPU; (a) is cheap enough to cross-validate |
 | validation | 5-fold stratified CV on train+val for the scikit-learn models; train/val for Keras (early stopping, threshold); test used once | images are independent after deduplication, so stratified splits are valid |
-| metrics | ROC-AUC, PR-AUC, F1, balanced accuracy, **error rate per source**, bootstrap 95% CI | balanced classes, but class 0 mixes easy photos with hard AI negatives |
+| metrics | ROC-AUC, PR-AUC, F1, balanced accuracy, **error rate per source** | balanced classes, but class 0 mixes easy photos with hard AI negatives |
 | error analysis | most confident mistakes, a border-removal test (watermarks), occlusion maps | checks what the model looks at |
 
 Keras training has two stages. First only the classification head is trained (5 epochs, lr 1e-3). Then the top 30 MobileNetV2
@@ -53,12 +53,12 @@ balanced accuracy on the validation set.
 
 **Held-out test set** (1498 images, used once):
 
-| model | ROC-AUC [95% CI] | PR-AUC | F1 | bal. acc. | error on brainrot | error on photo | error on ai_normal |
+| model | ROC-AUC | PR-AUC | F1 | bal. acc. | error on brainrot | error on photo | error on ai_normal |
 |---|---|---|---|---|---|---|---|
 | majority class | 0.500 | 0.499 | 0.000 | 0.500 | 100 % | 0 % | 0 % |
-| colour histogram + logreg | 0.773 [0.750, 0.797] | 0.718 | 0.725 | 0.717 | 25.3 % | 28.9 % | 53.3 % |
-| embeddings + logreg | 0.972 [0.964, 0.979] | 0.969 | 0.931 | 0.931 | 7.2 % | 3.0 % | 38.7 % |
-| **fine-tuned MobileNetV2** | **0.986 [0.981, 0.991]** | **0.982** | **0.951** | **0.951** | **4.7 %** | **1.5 %** | **38.7 %** |
+| colour histogram + logreg | 0.773 | 0.718 | 0.725 | 0.717 | 25.3 % | 28.9 % | 53.3 % |
+| embeddings + logreg | 0.972 | 0.969 | 0.931 | 0.931 | 7.2 % | 3.0 % | 38.7 % |
+| **fine-tuned MobileNetV2** | **0.986** | **0.982** | **0.951** | **0.951** | **4.7 %** | **1.5 %** | **38.7 %** |
 
 The fine-tuned model uses threshold 0.35, the value that maximised balanced accuracy on the validation set.
 Figures are in `reports/figures/`; all numbers are also in `reports/metrics.json`.
@@ -77,7 +77,7 @@ Brainrot also has a recognisable colour style: colour alone gives 0.77. Cropping
 photos about equally, so there is no sign that the model relies on TikTok watermarks or captions.
 
 **Not supported.** That the model understands "brainrot" as a concept. **29 of 75 ordinary AI-generated test images
-(38.7 %, Wilson 95% CI 28–50 %) are flagged as brainrot.** These are mostly cartoon-like creatures with big eyes, so
+(38.7 %) are flagged as brainrot.** These are mostly cartoon-like creatures with big eyes, so
 the model has partly learnt "AI-generated character ⇒ brainrot". The hard-negative curve shows this error falls
 steadily as more ordinary AI images are added to training and has not levelled off. Collecting more hard negatives is
 the most promising next step.
@@ -92,14 +92,22 @@ the most promising next step.
 
 **Bottom line:** usable as a "brainrot vs photos" filter, but not yet as a "brainrot vs any AI picture" filter.
 
-## 6. Who did what (pair work)
+## 6. Work done
 
-| part | owner | explains at the defence |
-|---|---|---|
-| question, data sources, `prepare_data.py`, EDA, duplicates, split | Partner A — *name* | why hard negatives, why the standardisation, why stratify by source |
-| baselines, CV, metrics, comparison tables | Partner A — *name* | what the colour baseline proves, why balanced accuracy / PR-AUC |
-| Keras model, two-stage training, threshold | Partner B — *name* | transfer learning, frozen BatchNorm, early stopping, threshold on val |
-| error analysis (per-source errors, border test, occlusion, hard-negative curve), Streamlit app | Partner B — *name* | what the model really learnt and where it fails |
+1. **Question and data.** Defined the task and chose the data sources, including ordinary AI-generated images as
+   hard negatives so the model cannot win by just detecting AI images.
+2. **Data preparation** (`prepare_data.py`). Downloaded everything, gave every image the same standardisation
+   (RGB, centre crop, 256×256, JPEG 90), removed duplicates and split 70/15/15 stratified by source.
+3. **EDA.** Checked class and source balance and looked through samples of every source.
+4. **Baselines.** Majority class and colour histogram + logistic regression, to measure how much colour/style alone explains.
+5. **Embeddings model and CV.** Frozen MobileNetV2 embeddings + logistic regression, compared with the baselines via
+   5-fold stratified CV using ROC-AUC, PR-AUC, F1 and balanced accuracy.
+6. **Keras model.** MobileNetV2 fine-tuned in two stages (head first, then top 30 layers with frozen BatchNorm),
+   with augmentation and early stopping; the decision threshold was chosen on the validation set.
+7. **Test evaluation.** All models evaluated once on the held-out test set, with error rates per source.
+8. **Error analysis.** Most confident mistakes, the border-removal test, occlusion maps and the hard-negative
+   learning curve, to see what the model really learnt and where it fails.
+9. **Streamlit app.** A demo that classifies uploaded images with the fine-tuned model.
 
 ## 7. Use of AI tools
 
