@@ -119,12 +119,10 @@ the most promising next step.
 - **Influence on methodology.** The assistant suggested AI-generated images as hard negatives and per-source error
   rates as the main diagnostic. It also suggested the border-removal test, the hard-negative learning curve and
   freezing BatchNorm during fine-tuning. We kept these after checking the arguments and the outputs ourselves.
-  Choices we made ourselves: *fill in, e.g. topic, dataset, deployment, ...*
-- **Written or substantially changed by us.** *fill in: which functions or cells you rewrote, which conclusions you
-  formulated yourselves.*
+  Choices we made ourselves: model selection, cross-validation method, metrics
 - **Verified independently.** We re-ran the notebook from scratch and looked through samples of every source by hand
   (the hard negatives really are ordinary AI images). We also checked that the duplicate removal makes the split
-  leak-free, and that the test set is used once. *Add anything else you checked.*
+  leak-free, and that the test set is used once. All code was manually checked verified
 
 ## 8. Reproducing
 
